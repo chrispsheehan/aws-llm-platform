@@ -53,11 +53,11 @@ private key file does not exist.
 
 ## EC2 sizing
 
-For a self-hosted coding assistant with `open-webui`, `ollama`, and `qwen2.5-coder:3b`, these are the practical EC2 starting points in `us-east-1`:
+For a self-hosted coding assistant with `open-webui`, `ollama`, and `qwen2.5-coder:3b`, these are the practical EC2 starting points in `eu-west-2`:
 
-- `S` - `m7g.large` - cheapest possible experiment - `2 vCPU`, `8 GiB RAM` - about `$0.0816/hr` and `$1.96/day`
-- `M` - `m7g.xlarge` - recommended minimum for realistic Codex-like CLI experimentation - `4 vCPU`, `16 GiB RAM` - about `$0.1632/hr` and `$3.92/day`
-- `L` - `g4dn.xlarge` - faster GPU-backed option when lower latency matters more than cost - `4 vCPU`, `16 GiB RAM`, `1x T4 GPU` - about `$0.5260/hr` and `$12.62/day`
+- `S` - `m7g.large` - cheapest possible experiment - `2 vCPU`, `8 GiB RAM` - about `$0.0944/hr` and `$2.27/day`
+- `M` - `m7g.xlarge` - recommended minimum for realistic Codex-like CLI experimentation - `4 vCPU`, `16 GiB RAM` - about `$0.1887/hr` and `$4.53/day`
+- `L` - `g4dn.xlarge` - faster GPU-backed option when lower latency matters more than cost - `4 vCPU`, `16 GiB RAM`, `1x T4 GPU` - about `$0.6150/hr` and `$14.76/day`
 
 Guidance:
 
