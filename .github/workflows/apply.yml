@@ -1,4 +1,4 @@
-name: Dev Infra Apply
+name: Apply
 
 on:
   workflow_dispatch:
