@@ -34,6 +34,9 @@ jobs:
             terragrunt 0.72.6
           github_token: ${{ github.token }}
 
-      - uses: ./.github/actions/just
-        with:
-          just_action: tg-all dev apply
+      - name: Apply dev infra
+        shell: bash
+        working-directory: infra/live/dev/aws
+        run: |
+          set -euo pipefail
+          terragrunt run-all --terragrunt-non-interactive apply -auto-approve

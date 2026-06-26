@@ -31,12 +31,18 @@ shell that already has AWS credentials:
 export AWS_PROFILE=default
 export AWS_REGION=eu-west-2
 
-just tg dev aws/oidc apply
+cd infra/live/dev/aws/oidc
+terragrunt --terragrunt-non-interactive apply -auto-approve
 ```
 
-This minimal dev scaffold expects the target AWS account and region to still
-have a default VPC with at least one default subnet. The `ec2_host` module
-launches into that default network instead of creating a dedicated VPC.
+This minimal dev scaffold expects the target AWS account and region to already
+contain a VPC with `Name` tag `vpc` and at least one public subnet with a
+`Name` tag containing `public`. The `ec2_host` module looks up that VPC and
+those public subnets instead of creating a dedicated network.
+
+The default `web_ingress_cidrs` value is intentionally empty. When left empty,
+the `ec2_host` module resolves the current public IP from
+`https://checkip.amazonaws.com` and applies it as a `/32`.
 
 Then set these GitHub Actions repository variables:
 
@@ -49,9 +55,11 @@ PROJECT_NAME=aws-llm-platform
 ## Defaults
 
 - Default region: `eu-west-2`
+- Default VPC name: `vpc`
 - Default dev host size: `t3.xlarge`
 - Default root volume size: `80 GiB`
 - Default model: `qwen2.5-coder:3b`
+- Default web ingress: current public IP detected at apply time from `https://checkip.amazonaws.com`
 
 The `EC2` default is `x86_64` on purpose so infra apply can mirror the upstream
 container images into `ECR` without a separate multi-arch build pipeline.

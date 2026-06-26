@@ -1,0 +1,8 @@
+.env
+*.terragrunt-cache
+*.terraform
+infra/live/*.tf
+*-debug.tfvars.json
+*.zip
+*.DS_store
+*.lock.hcl

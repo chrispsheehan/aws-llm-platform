@@ -16,9 +16,7 @@ Then open `http://localhost:3000`.
 
 Notes:
 
-- `just start` checks free disk space first, runs `docker compose pull`, starts the containers, then pulls the Ollama model configured by `OLLAMA_DEFAULT_MODEL`, lists the available Ollama models, and opens `http://localhost:3000` on macOS.
-- The disk check prints host free space using a conservative `5 GiB` minimum for the stack itself.
-- On macOS with Docker Desktop, the disk check also estimates free space inside Docker Desktop from the configured disk image size and current `Docker.raw` allocation. For `qwen2.5-coder:3b`, it requires a conservative `10 GiB` of free space there before pulling images.
+- `just start` runs `docker compose pull`, starts the containers, then pulls the Ollama model configured by `OLLAMA_DEFAULT_MODEL`, lists the available Ollama models, and opens `http://localhost:3000` on macOS.
 - `just start` automatically downloads the Ollama model configured by `OLLAMA_DEFAULT_MODEL` into the `ollama` container.
 - `WEBUI_AUTH` is disabled for local use. Turn it on before exposing this outside your machine.
 - If you want a different default model later, change `OLLAMA_DEFAULT_MODEL` in `docker-compose.yml`.
@@ -38,12 +36,14 @@ Included stacks:
 Useful commands:
 
 ```bash
-just tg dev aws/oidc apply
-just dev-infra-apply
-just dev-destroy
+just tg dev apply
+just destroy
 ```
 
 Bootstrap and workflow details live in [infra/README.md](infra/README.md).
+The dev `EC2` ingress is IP-restricted by default. When `web_ingress_cidrs` is
+empty, Terraform resolves the current public IP from `https://checkip.amazonaws.com`
+and applies it as a `/32`.
 
 ## EC2 sizing
 

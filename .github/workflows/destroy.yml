@@ -34,7 +34,9 @@ jobs:
             terragrunt 0.72.6
           github_token: ${{ github.token }}
 
-      - uses: ./.github/actions/just
-        with:
-          justfile_path: scripts/destroy/justfile
-          just_action: destroy-dev
+      - name: Destroy dev infra
+        shell: bash
+        working-directory: infra/live/dev/aws
+        run: |
+          set -euo pipefail
+          terragrunt run-all --terragrunt-non-interactive --terragrunt-exclude-dir ./oidc destroy -auto-approve

@@ -2,19 +2,26 @@ data "aws_ssm_parameter" "amazon_linux" {
   name = "/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-6.1-x86_64"
 }
 
-data "aws_vpc" "default" {
-  default = true
+data "http" "public_ip" {
+  url = "https://checkip.amazonaws.com"
 }
 
-data "aws_subnets" "default" {
+data "aws_vpc" "this" {
+  filter {
+    name   = "tag:Name"
+    values = [var.vpc_name]
+  }
+}
+
+data "aws_subnets" "public" {
   filter {
     name   = "vpc-id"
-    values = [data.aws_vpc.default.id]
+    values = [data.aws_vpc.this.id]
   }
 
   filter {
-    name   = "default-for-az"
-    values = ["true"]
+    name   = "tag:Name"
+    values = ["*public*"]
   }
 }
 
