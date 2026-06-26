@@ -1,5 +1,6 @@
 locals {
   name_prefix                 = "${var.environment}-${var.project_name}"
+  # do it like thi https://github.com/chrispsheehan/aws-argocd/blob/main/tf/main.tf#L76
   effective_web_ingress_cidrs = length(var.web_ingress_cidrs) > 0 ? var.web_ingress_cidrs : ["${trimspace(data.http.public_ip.response_body)}/32"]
   ssh_enabled                 = trimspace(var.ssh_public_key) != ""
   compose_object = {
