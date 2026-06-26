@@ -38,12 +38,18 @@ Useful commands:
 ```bash
 just tg dev apply
 just destroy
+just ssh
 ```
 
 Bootstrap and workflow details live in [infra/README.md](infra/README.md).
 The dev `EC2` ingress is IP-restricted by default. When `web_ingress_cidrs` is
 empty, Terraform resolves the current public IP from `https://checkip.amazonaws.com`
 and applies it as a `/32`.
+For plain SSH access, the dev Terragrunt config defaults `ssh_public_key` from
+`~/.ssh/id_ed25519.pub` when that file exists. `SSH_PUBLIC_KEY` still overrides
+that default, and CI applies should set `SSH_PUBLIC_KEY` as a GitHub Actions
+secret. `just ssh` uses `~/.ssh/id_ed25519` by default and fails if that
+private key file does not exist.
 
 ## EC2 sizing
 

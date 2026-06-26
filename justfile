@@ -40,3 +40,20 @@ plan:
     cd "{{PROJECT_DIR}}/infra/live/dev/aws"
     export AWS_ACCOUNT_ID="$(aws sts get-caller-identity --query Account --output text)"
     terragrunt run-all --terragrunt-non-interactive plan
+
+ssh:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    ssh_key_path="${SSH_KEY_PATH:-$HOME/.ssh/id_ed25519}"
+    if [[ ! -f "${ssh_key_path}" ]]; then
+        echo "SSH private key not found at ${ssh_key_path}." >&2
+        exit 1
+    fi
+    cd "{{PROJECT_DIR}}/infra/live/dev/aws/ec2_host"
+    export AWS_ACCOUNT_ID="$(aws sts get-caller-identity --query Account --output text)"
+    public_ip="$(terragrunt output -raw public_ip)"
+    exec ssh \
+        -i "${ssh_key_path}" \
+        -o StrictHostKeyChecking=no \
+        -o UserKnownHostsFile=/dev/null \
+        "ec2-user@${public_ip}"
