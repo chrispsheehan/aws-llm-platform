@@ -43,10 +43,7 @@ destroy:
 apply:
     #!/usr/bin/env bash
     set -euo pipefail
-    ssh_public_key_path="${SSH_PUBLIC_KEY_PATH:-$HOME/.ssh/id_ed25519.pub}"
-    if [[ -z "${TF_VAR_ssh_public_key:-}" && -f "${ssh_public_key_path}" ]]; then
-        export TF_VAR_ssh_public_key="$(tr -d '\n' < "${ssh_public_key_path}")"
-    fi
+    export TF_VAR_ssh_public_key="$(cat ~/.ssh/ec2_key.pub)"
     cd "{{PROJECT_DIR}}/infra/live/dev/aws"
     export AWS_ACCOUNT_ID="$(aws sts get-caller-identity --query Account --output text)"
     terragrunt run-all --terragrunt-non-interactive apply
@@ -54,10 +51,7 @@ apply:
 plan:
     #!/usr/bin/env bash
     set -euo pipefail
-    ssh_public_key_path="${SSH_PUBLIC_KEY_PATH:-$HOME/.ssh/id_ed25519.pub}"
-    if [[ -z "${TF_VAR_ssh_public_key:-}" && -f "${ssh_public_key_path}" ]]; then
-        export TF_VAR_ssh_public_key="$(tr -d '\n' < "${ssh_public_key_path}")"
-    fi
+    export TF_VAR_ssh_public_key="$(cat ~/.ssh/ec2_key.pub)"
     cd "{{PROJECT_DIR}}/infra/live/dev/aws"
     export AWS_ACCOUNT_ID="$(aws sts get-caller-identity --query Account --output text)"
     terragrunt run-all --terragrunt-non-interactive plan
@@ -65,7 +59,7 @@ plan:
 ssh:
     #!/usr/bin/env bash
     set -euo pipefail
-    ssh_key_path="${SSH_KEY_PATH:-$HOME/.ssh/id_ed25519}"
+    ssh_key_path=~/.ssh/ec2_key
     if [[ ! -f "${ssh_key_path}" ]]; then
         echo "SSH private key not found at ${ssh_key_path}." >&2
         exit 1
