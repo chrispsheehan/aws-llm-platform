@@ -20,6 +20,12 @@ start:
         open http://localhost:3000; \
     '
 
+# Run Terraform and Terragrunt formatting locally.
+format:
+    #!/usr/bin/env bash
+    terraform fmt -recursive
+    terragrunt hclfmt
+
 setup:
     #!/usr/bin/env bash
     set -euo pipefail
