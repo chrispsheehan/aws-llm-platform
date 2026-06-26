@@ -1,0 +1,6 @@
+destroy-dev:
+    #!/usr/bin/env bash
+    set -euo pipefail
+
+    just tg dev aws/ec2_host destroy
+    just tg dev aws/ecr destroy

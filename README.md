@@ -23,6 +23,28 @@ Notes:
 - `WEBUI_AUTH` is disabled for local use. Turn it on before exposing this outside your machine.
 - If you want a different default model later, change `OLLAMA_DEFAULT_MODEL` in `docker-compose.yml`.
 
+## Dev AWS Infra
+
+This repo also includes a dev-only Terragrunt scaffold, guided by
+`aws-terragrunt-starter`, for a single `EC2` Docker host backed by private
+`ECR` repositories.
+
+Included stacks:
+
+- `aws/oidc`
+- `aws/ecr`
+- `aws/ec2_host`
+
+Useful commands:
+
+```bash
+just tg dev aws/oidc apply
+just dev-infra-apply
+just dev-destroy
+```
+
+Bootstrap and workflow details live in [infra/README.md](infra/README.md).
+
 ## EC2 sizing
 
 For a self-hosted coding assistant with `open-webui`, `ollama`, and `qwen2.5-coder:3b`, these are the practical EC2 starting points in `us-east-1`:

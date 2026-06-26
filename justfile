@@ -1,6 +1,8 @@
 default:
     @just --list
 
+PROJECT_DIR := justfile_directory()
+
 check-space:
     @bash -eu -c '\
         required_host_kb=5242880; \
@@ -67,3 +69,37 @@ start: check-space
         echo "Opening http://localhost:3000"; \
         open http://localhost:3000; \
     '
+
+tg env module op:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    cd "{{PROJECT_DIR}}/infra/live/{{env}}/{{module}}"
+    if [[ -z "${AWS_ACCOUNT_ID:-}" ]]; then
+        AWS_ACCOUNT_ID="$(aws sts get-caller-identity --query Account --output text)"
+        export AWS_ACCOUNT_ID
+    fi
+    if [[ "{{op}}" == "apply" || "{{op}}" == "destroy" ]]; then
+        terragrunt --terragrunt-non-interactive {{op}} -auto-approve
+    else
+        terragrunt --terragrunt-non-interactive {{op}}
+    fi
+
+tg-all env op:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    cd "{{PROJECT_DIR}}/infra/live/{{env}}/aws"
+    if [[ -z "${AWS_ACCOUNT_ID:-}" ]]; then
+        AWS_ACCOUNT_ID="$(aws sts get-caller-identity --query Account --output text)"
+        export AWS_ACCOUNT_ID
+    fi
+    if [[ "{{op}}" == "apply" || "{{op}}" == "destroy" ]]; then
+        terragrunt run-all --terragrunt-non-interactive {{op}} -auto-approve
+    else
+        terragrunt run-all --terragrunt-non-interactive {{op}}
+    fi
+
+dev-infra-apply:
+    just tg-all dev apply
+
+dev-destroy:
+    just --justfile scripts/destroy/justfile destroy-dev
