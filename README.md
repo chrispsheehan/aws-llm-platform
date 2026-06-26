@@ -36,11 +36,13 @@ Included stacks:
 Useful commands:
 
 ```bash
+just setup
 just tg dev apply
 just destroy
 just ssh
 ```
 
+`just setup` applies the one-time GitHub OIDC role in `infra/live/dev/aws/oidc`.
 Bootstrap and workflow details live in [infra/README.md](infra/README.md).
 The dev `EC2` ingress is IP-restricted by default. When `web_ingress_cidrs` is
 empty, Terraform resolves the current public IP from `https://checkip.amazonaws.com`

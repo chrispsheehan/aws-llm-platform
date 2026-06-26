@@ -20,6 +20,13 @@ start:
         open http://localhost:3000; \
     '
 
+setup:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    cd "{{PROJECT_DIR}}/infra/live/dev/aws/oidc"
+    export AWS_ACCOUNT_ID="$(aws sts get-caller-identity --query Account --output text)"
+    terragrunt --terragrunt-non-interactive apply
+
 destroy:
     #!/usr/bin/env bash
     set -euo pipefail

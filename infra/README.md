@@ -28,11 +28,7 @@ Before GitHub Actions can deploy, create the `dev` OIDC role once from a local
 shell that already has AWS credentials:
 
 ```bash
-export AWS_PROFILE=default
-export AWS_REGION=eu-west-2
-
-cd infra/live/dev/aws/oidc
-terragrunt --terragrunt-non-interactive apply -auto-approve
+just setup
 ```
 
 This minimal dev scaffold expects the target AWS account and region to already
