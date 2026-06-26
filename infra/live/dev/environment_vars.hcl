@@ -5,7 +5,6 @@ locals {
   instance_type         = "t3.xlarge"
   root_volume_size_gb   = 80
   ollama_default_model  = "qwen2.5-coder:3b"
-  web_ingress_cidrs     = []
 }
 
 inputs = {
@@ -15,5 +14,4 @@ inputs = {
   instance_type         = local.instance_type
   root_volume_size_gb   = local.root_volume_size_gb
   ollama_default_model  = local.ollama_default_model
-  web_ingress_cidrs     = local.web_ingress_cidrs
 }
