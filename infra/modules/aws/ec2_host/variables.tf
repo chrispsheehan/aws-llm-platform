@@ -39,5 +39,14 @@ variable "ollama_image_uri" {
 }
 
 variable "ssh_public_key" {
-  type = string
+  type      = string
+  sensitive = true
+
+  validation {
+    condition = trimspace(var.ssh_public_key) == "" || can(regex(
+      "^(ssh-ed25519|ssh-rsa|ecdsa-sha2-nistp256|ecdsa-sha2-nistp384|ecdsa-sha2-nistp521|sk-ssh-ed25519@openssh.com|sk-ecdsa-sha2-nistp256@openssh.com) [A-Za-z0-9+/=]+( .*)?$",
+      trimspace(var.ssh_public_key),
+    ))
+    error_message = "ssh_public_key must be blank or a single-line OpenSSH public key such as the contents of ~/.ssh/id_ed25519.pub."
+  }
 }

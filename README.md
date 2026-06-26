@@ -6,7 +6,9 @@ This repo includes a Docker Compose stack for a fully self-hosted chat UI using:
 - `Ollama` for local model serving
 - `qwen2.5-coder:3b` as the default model configured in Compose for a better small local coding model
 
-Start it with:
+## Run Locally
+
+Start the local stack:
 
 ```bash
 just start
@@ -14,9 +16,22 @@ just start
 
 Then open `http://localhost:3000`.
 
+What `just start` does:
+
+- pulls the Compose images
+- starts `open-webui` and `ollama`
+- pulls the default Ollama model configured by `OLLAMA_DEFAULT_MODEL`
+- prints the installed Ollama models
+- opens `http://localhost:3000` on macOS
+
+To stop the local stack:
+
+```bash
+docker compose down
+```
+
 Notes:
 
-- `just start` runs `docker compose pull`, starts the containers, then pulls the Ollama model configured by `OLLAMA_DEFAULT_MODEL`, lists the available Ollama models, and opens `http://localhost:3000` on macOS.
 - `just start` automatically downloads the Ollama model configured by `OLLAMA_DEFAULT_MODEL` into the `ollama` container.
 - `WEBUI_AUTH` is disabled for local use. Turn it on before exposing this outside your machine.
 - If you want a different default model later, change `OLLAMA_DEFAULT_MODEL` in `docker-compose.yml`.
@@ -37,21 +52,24 @@ Useful commands:
 
 ```bash
 just setup
-just tg dev apply
+just apply
 just destroy
 just ssh
 ```
 
 `just setup` applies the one-time GitHub OIDC role in `infra/live/dev/aws/oidc`.
+`just apply` deploys the dev Terragrunt stacks after OIDC bootstrap.
 Bootstrap and workflow details live in [infra/README.md](infra/README.md).
 The dev `EC2` ingress is IP-restricted by default. When `web_ingress_cidrs` is
 empty, Terraform resolves the current public IP from `https://checkip.amazonaws.com`
 and applies it as a `/32`.
 For plain SSH access, the dev Terragrunt config defaults `ssh_public_key` from
-`~/.ssh/id_ed25519.pub` when that file exists. `SSH_PUBLIC_KEY` still overrides
-that default, and CI applies should set `SSH_PUBLIC_KEY` as a GitHub Actions
-secret. `just ssh` uses `~/.ssh/id_ed25519` by default and fails if that
-private key file does not exist.
+`~/.ssh/id_ed25519.pub` when that file exists. `just setup`, `just apply`, and
+`just plan` will inject that file automatically as `TF_VAR_ssh_public_key`
+unless it is already set. Set `SSH_PUBLIC_KEY_PATH` if your public key lives
+somewhere else. CI applies should set `TF_VAR_ssh_public_key` as a GitHub
+Actions secret. `just ssh` uses `~/.ssh/id_ed25519` by default and fails if
+that private key file does not exist.
 
 ## EC2 sizing
 

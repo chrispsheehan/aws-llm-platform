@@ -31,20 +31,24 @@ resource "aws_security_group" "this" {
   description = "Dev web access for ${local.name_prefix}"
   vpc_id      = data.aws_vpc.this.id
 
-  ingress {
-    description = "Open WebUI"
-    from_port   = 3000
-    to_port     = 3000
-    protocol    = "tcp"
-    cidr_blocks = local.effective_web_ingress_cidrs
-  }
-
   egress {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
+}
+
+resource "aws_security_group_rule" "web" {
+  count = length(local.effective_web_ingress_cidrs)
+
+  type              = "ingress"
+  description       = "Open WebUI"
+  from_port         = 3000
+  to_port           = 3000
+  protocol          = "tcp"
+  cidr_blocks       = [local.effective_web_ingress_cidrs[count.index]]
+  security_group_id = aws_security_group.this.id
 }
 
 resource "aws_security_group_rule" "ssh" {

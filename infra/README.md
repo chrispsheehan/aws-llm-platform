@@ -40,11 +40,14 @@ The default `web_ingress_cidrs` value is intentionally empty. When left empty,
 the `ec2_host` module resolves the current public IP from
 `https://checkip.amazonaws.com` and applies it as a `/32`.
 If you want SSH access, the dev Terragrunt config defaults `ssh_public_key`
-from `~/.ssh/id_ed25519.pub` when that file exists. `SSH_PUBLIC_KEY` still
-overrides that default. In GitHub Actions, set `SSH_PUBLIC_KEY` as a
-repository or environment secret. That causes the module to create an `EC2`
-key pair, attach it to the instance, and open port `22` to the same
-IP-restricted CIDRs.
+from `~/.ssh/id_ed25519.pub` when that file exists. `TF_VAR_ssh_public_key` still
+overrides that default, and `SSH_PUBLIC_KEY_PATH` can point at a different
+local public key file. `just apply` and `just plan` export the value as
+`TF_VAR_ssh_public_key`. The value must be a single-line OpenSSH public key,
+not a private key or a multiline PEM block. In GitHub Actions, set
+`TF_VAR_ssh_public_key` as a repository or environment secret. That causes the
+module to create an `EC2` key pair, attach it to the instance, and open port
+`22` to the same IP-restricted CIDRs.
 
 Then set these GitHub Actions repository variables:
 
@@ -58,7 +61,7 @@ And set this GitHub Actions secret if you want SSH enabled from CI-managed
 applies:
 
 ```text
-SSH_PUBLIC_KEY=<contents of ~/.ssh/id_ed25519.pub>
+TF_VAR_ssh_public_key=<contents of ~/.ssh/id_ed25519.pub>
 ```
 
 ## Defaults
@@ -69,7 +72,7 @@ SSH_PUBLIC_KEY=<contents of ~/.ssh/id_ed25519.pub>
 - Default root volume size: `80 GiB`
 - Default model: `qwen2.5-coder:3b`
 - Default web ingress: current public IP detected at apply time from `https://checkip.amazonaws.com`
-- Default SSH access: `~/.ssh/id_ed25519.pub` when present locally, otherwise disabled unless `SSH_PUBLIC_KEY` is set
+- Default SSH access: `~/.ssh/id_ed25519.pub` when present locally, otherwise disabled unless `TF_VAR_ssh_public_key` is set
 
 The `EC2` default is `x86_64` on purpose so infra apply can mirror the upstream
 container images into `ECR` without a separate multi-arch build pipeline.
