@@ -61,8 +61,11 @@ just ssh
 `just apply` deploys the dev Terragrunt stacks after OIDC bootstrap.
 Bootstrap and workflow details live in [infra/README.md](infra/README.md).
 The dev `EC2` ingress is IP-restricted by default. When `web_ingress_cidrs` is
-empty, Terraform resolves the current public IP from `https://checkip.amazonaws.com`
-and applies it as a `/32`.
+omitted, Terraform defaults it to `["192.168.1.1"]` and normalizes plain IPv4
+addresses to `/32`.
+If you set `web_ingress_cidrs` explicitly, you can pass either a plain IPv4
+address or a CIDR block; plain IPv4 addresses are normalized to `/32` by the
+module.
 For plain SSH access, the dev Terragrunt config defaults `ssh_public_key` from
 `~/.ssh/id_ed25519.pub` when that file exists. `just setup`, `just apply`, and
 `just plan` will inject that file automatically as `TF_VAR_ssh_public_key`

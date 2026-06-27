@@ -24,6 +24,8 @@ variable "root_volume_size_gb" {
 
 variable "web_ingress_cidrs" {
   type = list(string)
+
+  default = ["192.168.1.1"]
 }
 
 variable "ollama_default_model" {

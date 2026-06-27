@@ -36,9 +36,11 @@ contain a VPC with `Name` tag `vpc` and at least one public subnet with a
 `Name` tag containing `public`. The `ec2_host` module looks up that VPC and
 those public subnets instead of creating a dedicated network.
 
-The default `web_ingress_cidrs` value is intentionally empty. When left empty,
-the `ec2_host` module resolves the current public IP from
-`https://checkip.amazonaws.com` and applies it as a `/32`.
+The default `web_ingress_cidrs` value is `["192.168.1.1"]`. Plain IPv4
+addresses are normalized to `/32` by the module.
+If you set `web_ingress_cidrs` manually, you can provide either plain IPv4
+addresses or CIDR blocks. Plain IPv4 addresses are normalized to `/32` by the
+module.
 If you want SSH access, the dev Terragrunt config defaults `ssh_public_key`
 from `~/.ssh/id_ed25519.pub` when that file exists. `TF_VAR_ssh_public_key` still
 overrides that default, and `SSH_PUBLIC_KEY_PATH` can point at a different

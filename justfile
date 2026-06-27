@@ -36,24 +36,25 @@ setup:
 destroy:
     #!/usr/bin/env bash
     set -euo pipefail
-    cd "{{PROJECT_DIR}}/infra/live/dev/aws"
+    export TF_VAR_ssh_public_key="$(cat ~/.ssh/ec2_key.pub)"
     export AWS_ACCOUNT_ID="$(aws sts get-caller-identity --query Account --output text)"
+    cd "{{PROJECT_DIR}}/infra/live/dev/aws"
     terragrunt run-all --terragrunt-non-interactive --terragrunt-exclude-dir ./oidc destroy
 
 apply:
     #!/usr/bin/env bash
     set -euo pipefail
     export TF_VAR_ssh_public_key="$(cat ~/.ssh/ec2_key.pub)"
-    cd "{{PROJECT_DIR}}/infra/live/dev/aws"
     export AWS_ACCOUNT_ID="$(aws sts get-caller-identity --query Account --output text)"
+    cd "{{PROJECT_DIR}}/infra/live/dev/aws"
     terragrunt run-all --terragrunt-non-interactive apply
 
 plan:
     #!/usr/bin/env bash
     set -euo pipefail
     export TF_VAR_ssh_public_key="$(cat ~/.ssh/ec2_key.pub)"
-    cd "{{PROJECT_DIR}}/infra/live/dev/aws"
     export AWS_ACCOUNT_ID="$(aws sts get-caller-identity --query Account --output text)"
+    cd "{{PROJECT_DIR}}/infra/live/dev/aws"
     terragrunt run-all --terragrunt-non-interactive plan
 
 ssh:
